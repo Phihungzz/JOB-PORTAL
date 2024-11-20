@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Job seeker registration";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+
+}
+
+<div class="container-fluid mt-5">
+    <div class="row ">
+        <div class="col-md-4 mt-5">
+            <div class="cus-box-reg">
+                <center> <img src="~/Content/Static/white-boy.a0d2814a.png" /></center>
+                <ul class="mt-1">
+                <li>
+                    Khi đăng ký có thể lập hồ sơ để nhà tuyển dụng
+                    có thể tìm thấy bạn
+                </li>
+                <li> Thông tin việc làm sẽ được gửi đến email của bạn</li>
+
+                <li>  Tìm việc làm và phát triển sự nghiệp của bạn</li>
+                </ul>
+                <hr />
+                <center><a href="@Url.Action("EmployerRegister","Home")">Đăng ký với tư cách Nhà tuyển dụng</a></center>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-4" style="border: none;transform: translateY(0);">
+                <h3>Đăng ký của Ứng viên </h3>
+                <form action="/Home/JobSeekerRegister" method="post" id="fr" enctype="multipart/form-data" onsubmit="return validateRegisterForm()">
+                    @Html.AntiForgeryToken()
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="FirstName">Họ và tên lót</label>
+                                <input type="text" name="FirstName" id="FirstName" class="form-control" placeholder="Nhập họ và tên lót" onfocusout="validateFname(this)">
+                                <span id="error-fname" class="error-msg"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="LastName">Tên</label>
+                                <input type="text" name="LastName" id="LastName" placeholder="Nhập tên" class="form-control" onfocusout="validateLname(this)">
+                                <span id="error-lname" class="error-msg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <select name="Experience" class="form-control" onfocusout="validateExperience()">
+                            <option>Kinh nghiệm</option>
+                            <option value="0">Người mới tốt nghiệp</option>
+                            <option value="1">Đã có kinh nghiệm 1 năm</option>
+                            <option value="2">Đã có kinh nghiệm 2 năm</option>
+                            <option value="3">Đã có kinh nghiệm 3 năm</option>
+                            <option value="4">Đã có kinh nghiệm 4 năm</option>
+                            <option value="5">Đã có kinh nghiệm 5 năm</option>
+                        </select>
+                        <span id="error-experience" class="error-msg"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="dob">Ngày sinh</label><br>
+                                <input type="date" name="BirthDate" id="DateOfBirth" class="form-control" onblur="validateDate(this)">
+                                <p id="age"></p>
+                                <span id="error-date" class="error-msg"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="rform-input-sele mt-2">
+                                <label>Giới tính</label><br>
+                                <input type="radio" name="Gender" id="male" value="M" onchange="validateGender()"> Nam
+                                <input type="radio" name="Gender" id="female" value="F" onchange="validateGender()"> Nữ
+                                <input type="radio" name="Gender" id="other" value="O" onchange="validateGender()"> Khác
+                                <span id="error-gender" class="error-msg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="PhoneNumber">Số điện thoại</label>
+                        <input type="number" name="PhoneNumber" class="form-control" id="PhoneNumber" placeholder="Nhập số điện thoại"
+                               onfocusout="validatePhone(this)">
+                        <span id="error-phone" class="error-msg"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="Email">Email </label>
+                        <input type="text" name="Email" id="Email" class="form-control" placeholder="Nhập email"
+                               onfocusout="validateEmail(this)">
+                        <span id="error-email" class="error-msg"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label><br>
+                        <input type="text" name="Address" id="Address" class="form-control" placeholder="Nhập địa chỉ" onfocusout="validateAddress(this)">
+                        <span id="error-address" class="error-msg"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="state">Quận</label>
+                                <select name="State" id="state" class="form-control" onchange="updateCity()" onfocusout="validateStateCity()">
+                                    <option>Chọn quận</option>
+                                </select>
+                                <span id="error-city" class="error-msg"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mt-2">
+                                <label for="city">Thành phố</label>
+                                <select name="City" id="city" class="form-control" onfocusout="validateStateCity()">
+                                    <option>Chọn thành phố</option>
+                                </select>
+                                <span id="error-state" class="error-msg"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="username">Tên người dùng</label>
+                        <input type="text" name="Username" id="username" placeholder="Nhập tên người dùng" class="form-control" oninput="validateUsername(this.value)">
+                        <span id="error-username" class="error-msg"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <label for="Password">Mật khẩu</label>
+                        <input type="password" name="Password" id="Password" class="form-control" placeholder="Nhập mật khẩu" onkeyup="validateCpass(this)" onfocusout="validatePass(this)" title="Mật khẩu có ít nhất 8 kí tự
+Bao gồm chữ in hoa, số và kí tự đặc biệt">
+                        <span id="error-password" class="error-msg"></span>
+                    </div>
+
+
+                    <div class="form-group mt-2">
+                        <label for="ConfirmPassword">Xác nhận mật khẩu</label>
+                        <input type="password" name="cpassword" id="ConfirmPassword" placeholder="Nhập lại mật khẩu" class="form-control" onfocusout="validateCpass(this)">
+                        <span id="error-cpassword" class="error-msg"></span>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="imageUpload">Ảnh hồ sơ</label>
+                        <input type="file" name="imageUpload" id="imageUpload" class="form-control" accept=".png, .jpg, .jpeg, .gif, .bmp, .webp"  onchange="validateImage(this)" title="Bao gồm các định dạng: PNG, JPG, JPEG, BMP, WebP">
+                        <span id="error-image" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label for="resumeUpload">Tài liệu</label>
+                        <input type="file" name="resumeUpload" id="resumeUpload" class="form-control" accept=".pdf" onchange="validateResume(this)" title="Hỗ trợ định dạng:PDF">
+                        <span id="error-resume" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Đăng ký" class="btn-reg">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/Scripts/MyScripts/main.js"></script>
+

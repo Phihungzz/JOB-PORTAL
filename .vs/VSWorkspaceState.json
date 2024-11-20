@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\JobPortal",
+    "\\JobPortal\\JobPortal",
+    "\\JobPortal\\JobPortal\\bin",
+    "\\JobPortal\\JobPortal\\Views",
+    "\\JobPortal\\JobPortal\\Views\\Home"
+  ],
+  "SelectedNode": "\\JobPortal\\JobPortal\\Views\\Home\\Index.cshtml",
+  "PreviewInSolutionExplorer": false
+}

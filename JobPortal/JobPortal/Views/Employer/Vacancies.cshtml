@@ -1,0 +1,43 @@
+﻿@model IEnumerable<JobPortal.Models.JobDetails>
+
+@{
+    ViewBag.Title = "Posted jobs";
+    Layout = "~/Views/Shared/EmployerLayout.cshtml";
+}
+<h2>Danh sách việc làm</h2>
+
+<p>
+    @Html.ActionLink("Tạo tin tuyển dụng", "AddJobVacancy", "Employer", null, new { @class = "btn btn-success" })
+</p>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Mã việc làm</th>
+            <th scope="col">Mô tả</th>
+            <th scope="col">Loại hình</th>
+            <th scope="col">Hạn nộp đơn</th>
+            <th scope="col">Công khai</th>
+            <th scope="col">Lượt xem</th>
+            <th scope="col">Quản lý</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.JobID)</td>
+                <td>@Html.DisplayFor(modelItem => item.JobTitle)</td>
+                <td>@Html.DisplayFor(modelItem => item.EmploymentType)</td>
+                <td>@Html.DisplayFor(modelItem => item.ApplicationDeadline)</td>
+                <td>@Html.DisplayFor(modelItem => item.IsPublished)</td>
+                <td>@Html.DisplayFor(modelItem=>item.NumberOfViews)</td> 
+                <td>
+                    @Html.ActionLink("Xem", "JobDetails", "Employer", new { id = item.JobID }, new { @class = "btn btn-dark btn-sm" }) |
+                    @Html.ActionLink("Ứng tuyển", "Applications", "Employer", new { id = item.JobID }, new { @class = "btn btn-info btn-sm" }) |
+                    @Html.ActionLink("Sửa", "UpdateVacancy", "Employer", new { id = item.JobID }, new { @class = "btn btn-primary btn-sm" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

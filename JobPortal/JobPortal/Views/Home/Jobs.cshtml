@@ -1,0 +1,82 @@
+﻿@model IEnumerable<JobPortal.Models.JobDetails>
+
+@{
+    ViewBag.Title = "Jobs";
+    Layout = "~/Views/Shared/MainLayout.cshtml";
+    var categories = Model.Select(job => new { CategoryName = job.CategoryName, CategoryId = job.CategoryID }).Distinct().ToList();
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<div class="d-flex justify-content-center">
+    <div class="container-lg mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card p-4">
+                    <h4 class="text-center">Tìm kiếm với</h4>
+                    <div class="input-group mb-3">
+                        <input type="text" id="searchString" placeholder="Tìm kiếm..." class="form-control form-control-lg" style="width: calc(100% - 120px);" />
+                        <span class="input-group-append">
+                            <a href="#" id="searchButton" class="btn btn-primary btn-lg">Tìm kiếm</a>
+                        </span>
+                    </div>
+
+                    <p class="text-center">Danh sách các công việc:</p>
+                    @foreach (var cat in categories)
+                    {
+                        <a href="@Url.Action("Jobs", "Home", new { search = cat.CategoryName })" class="filter-category d-block text-center">@cat.CategoryName</a>
+                    }
+
+                    
+                    @if (Model.Count() == 0)
+                    {
+                        <div class="alert alert-warning text-center mt-4" role="alert">
+                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i> Không tìm thấy công việc
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                @if (Model.Count() > 0)
+                {
+                    foreach (var item in Model.OrderByDescending(job => job.JobID))
+                    {
+                        if (item.IsPublished && item.ApplicationDeadline >= DateTime.Now)
+                        {
+                            <div class="row mt-3">
+                                <div class="card p-4 w-100">
+                                    <div class="row">
+                                        <div class="col-md-2 text-center">
+                                            <img alt="CompanyLogo" src="data:jpg/png;base64,@Convert.ToBase64String(item.CompanyLogo)" class="rounded" width="70px" height="70px" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <h4 class="h5">@item.JobTitle</h4>
+                                            <p class="text-muted"><i class="fa fa-building-o"></i> @item.CompanyName</p>
+                                            <p class="text-muted"><i class="fa fa-briefcase"></i> @item.CategoryName , <i class="fa fa-map-marker"></i> @item.Location</p>
+                                            <p class="text-muted"><i class="fa fa-money"></i> @item.Salary</p>
+                                        </div>
+                                        <div class="col-md-2 d-flex align-items-center justify-content-end">
+                                            @Html.ActionLink("Details", "JobDetails", "JobSeeker", new { id = item.JobID} ,new { @class = "btn btn-outline-primary btn-lg" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/jquery-3.7.1.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#searchButton").click(function () {
+            var searchString = $("#searchString").val();
+            var url = "@Url.Action("Jobs", "Home")?search=" + encodeURIComponent(searchString);
+            window.location.href = url;
+        });
+    });
+</script>
